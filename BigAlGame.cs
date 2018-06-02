@@ -421,7 +421,7 @@ public class BigAlGame : MonoBehaviour {
         AlGlobalVar.EnergyValue = 100;
         labelenergy.text = "Energy: 100%";
         AlGlobalVar.algrowspeed = AlGlobalVar.getalgrowspeed();
-
+        
         // reset location
         alcloc1 = 8; // default al starting location
         alcloc2 = 4;
@@ -429,6 +429,7 @@ public class BigAlGame : MonoBehaviour {
         mloc2 = 4;
         AlGlobalVar.lastlvlcloc1 = alcloc1; // default al's saved location (later used for 'restart level')
         AlGlobalVar.lastlvlcloc2 = alcloc2;
+
 
         // save map
         for (int c1 = 1; c1 < 11; c1++)
@@ -484,6 +485,14 @@ public class BigAlGame : MonoBehaviour {
 
         // reset al
         AlGlobalVar.LevelValue = 0;
+
+        // DEBUG
+        //alcloc1 = 1;
+        //alcloc2 = 12;
+        //AlGlobalVar.LevelValue = 4;
+        //AlGlobalVar.WeightValue = 3000;
+        //matecount = 10;
+
         StartCoroutine("levelup");
 
         fivecount = 0;
@@ -785,56 +794,89 @@ public class BigAlGame : MonoBehaviour {
                 labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
                 labeldesc.text = "You successfully mated with the female Allosaurus!";
                 matecount = matecount + 1;
+
+                pause = false;
+                if (labeldesc.text == "Game paused.")
+                    labeldesc.text = "";
+                labeldesc.GetComponent<Text>().color = Color.white;
+                labeldesc.fontStyle = FontStyle.Normal;
+                buttonpause.GetComponentInChildren<Text>().color = Color.green;
             }
             else
             {
-                Popupbox1 = false;
-                Popupbox2 = false;
-                Popupbox3 = false;
-                Popupbox4 = false;
-                int ques = random.Next(AlGlobalVar.PQs.Count);
-                string message = "The Allosaurus is willing to mate... \r\nif you can answer this paleontology question correctly!\r\n" + AlGlobalVar.PQs[ques].Question;
-                string button1 = AlGlobalVar.PQs[ques].A1;
-                string button2 = AlGlobalVar.PQs[ques].A2;
-                string button3 = AlGlobalVar.PQs[ques].A3;
-                string button4 = AlGlobalVar.PQs[ques].A4;
-                pause = true;
-                labeldesc.text = "Game paused.";
-                labeldesc.GetComponent<Text>().color = Color.red;
-                labeldesc.fontStyle = FontStyle.Bold; 
-                buttonpause.GetComponentInChildren<Text>().color = Color.red;
+                StartCoroutine(domatingQuestion(enemynum, enemynums));                
+            }
+        }
+        else // fail
+        {
+            AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - 5;
+            labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
+            if (AlGlobalVar.EnergyValue < 40)
+            {
+                labelenergy.GetComponent<Text>().color = Color.red;
+                picturealenergygreen.SetSpriteImage("aloutlinered");
+                Image currimage2 = picturealenergygreen.GetImage();
+                currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
+            }
+            else if (AlGlobalVar.EnergyValue < 70)
+            {
+                labelenergy.GetComponent<Text>().color = Color.yellow;
+                picturealenergygreen.SetSpriteImage("aloutlineyellow");
+                Image currimage2 = picturealenergygreen.GetImage();
+                currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
+            }
+            else
+            {
+                labelenergy.GetComponent<Text>().color = Color.white;
+                picturealenergygreen.SetSpriteImage("aloutlinegreen");
+                Image currimage2 = picturealenergygreen.GetImage();
+                currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
+            }
+            updateAlstats();
+            dobattle(AlGlobalVar.Enemies.Find(x => x.Name == enemylist[enemynum - 1]), enemynums, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+            updateAlstats();
+            generateenemies();
+            labeldesc.text = "Bad luck! The female attacked you and left.";
+        }
+    }
+    IEnumerator domatingQuestion(int enemynum, string enemynums)
+    {
+        Popupbox1 = false;
+        Popupbox2 = false;
+        Popupbox3 = false;
+        Popupbox4 = false;
+        int ques = random.Next(AlGlobalVar.PQs.Count);
+        string message = "The Allosaurus is willing to mate... \r\nif you can answer this paleontology question correctly!\r\n" + AlGlobalVar.PQs[ques].Question;
+        string button1 = AlGlobalVar.PQs[ques].A1;
+        string button2 = AlGlobalVar.PQs[ques].A2;
+        string button3 = AlGlobalVar.PQs[ques].A3;
+        string button4 = AlGlobalVar.PQs[ques].A4;
+        pause = true;
+        labeldesc.text = "Game paused.";
+        labeldesc.GetComponent<Text>().color = Color.red;
+        labeldesc.fontStyle = FontStyle.Bold;
+        buttonpause.GetComponentInChildren<Text>().color = Color.red;
+
+        bool answered = false;
+        bool popped = false;
+        while (!answered)
+        {
+            if (!popped) // only display popup when starting
+            {
                 GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2, button3, button4);
                 GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
                 GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
                 GameObject.Find("GameController").GetComponent<Popupbox>().Button3Clicked += new EventHandler(frm_Button3Clicked);
                 GameObject.Find("GameController").GetComponent<Popupbox>().Button4Clicked += new EventHandler(frm_Button4Clicked);
-                pause = false;
-                labeldesc.text = "";
-                labeldesc.GetComponent<Text>().color = Color.white;
-                labeldesc.fontStyle = FontStyle.Normal; 
-                buttonpause.GetComponentInChildren<Text>().color = Color.green;
-                if (Popupbox1 == true && AlGlobalVar.PQs[ques].Answer == "1")
-                {
-                    AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 200;
-                    labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
-                    labeldesc.text = "Correct!\r\nYou successfully mated with the female Allosaurus!";
-                    matecount = matecount + 1;
-                }
-                else if (Popupbox2 == true && AlGlobalVar.PQs[ques].Answer == "2")
-                {
-                    AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 200;
-                    labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
-                    labeldesc.text = "Correct!\r\nYou successfully mated with the female Allosaurus!";
-                    matecount = matecount + 1;
-                }
-                else if (Popupbox3 == true && AlGlobalVar.PQs[ques].Answer == "3")
-                {
-                    AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 200;
-                    labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
-                    labeldesc.text = "Correct!\r\nYou successfully mated with the female Allosaurus!";
-                    matecount = matecount + 1;
-                }
-                else if (Popupbox4 == true && AlGlobalVar.PQs[ques].Answer == "4")
+                popped = true;
+            }
+            if (Popupbox1 || Popupbox2 || Popupbox3 || Popupbox4) // player has answered
+            {
+                answered = true;
+                if ((Popupbox1 && AlGlobalVar.PQs[ques].Answer == "1")
+                    || (Popupbox2 && AlGlobalVar.PQs[ques].Answer == "2")
+                    || (Popupbox3 && AlGlobalVar.PQs[ques].Answer == "3")
+                    || (Popupbox4 && AlGlobalVar.PQs[ques].Answer == "4"))
                 {
                     AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 200;
                     labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
@@ -877,44 +919,14 @@ public class BigAlGame : MonoBehaviour {
                     labeldesc.text = "Incorrect answer! The female attacked you and left.";
                 }
             }
-            pause = false;
-            if (labeldesc.text == "Game paused.")
-                labeldesc.text = "";
-            labeldesc.GetComponent<Text>().color = Color.white;
-            labeldesc.fontStyle = FontStyle.Normal; 
-            buttonpause.GetComponentInChildren<Text>().color = Color.green;
+            yield return new WaitForSeconds(0);
         }
-        else // fail
-        {
-            AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - 5;
-            labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
-            if (AlGlobalVar.EnergyValue < 40)
-            {
-                labelenergy.GetComponent<Text>().color = Color.red;
-                picturealenergygreen.SetSpriteImage("aloutlinered");
-                Image currimage2 = picturealenergygreen.GetImage();
-                currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
-            }
-            else if (AlGlobalVar.EnergyValue < 70)
-            {
-                labelenergy.GetComponent<Text>().color = Color.yellow;
-                picturealenergygreen.SetSpriteImage("aloutlineyellow");
-                Image currimage2 = picturealenergygreen.GetImage();
-                currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
-            }
-            else
-            {
-                labelenergy.GetComponent<Text>().color = Color.white;
-                picturealenergygreen.SetSpriteImage("aloutlinegreen");
-                Image currimage2 = picturealenergygreen.GetImage();
-                currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
-            }
-            updateAlstats();
-            dobattle(AlGlobalVar.Enemies.Find(x => x.Name == enemylist[enemynum - 1]), enemynums, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
-            updateAlstats();
-            generateenemies();
-            labeldesc.text = "Bad luck! The female attacked you and left.";
-        }
+        pause = false;
+        if (labeldesc.text == "Game paused.")
+            labeldesc.text = "";
+        labeldesc.GetComponent<Text>().color = Color.white;
+        labeldesc.fontStyle = FontStyle.Normal;
+        buttonpause.GetComponentInChildren<Text>().color = Color.green;
     }
     #endregion levelling
 
