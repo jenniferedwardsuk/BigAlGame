@@ -338,7 +338,7 @@ public class BigAlGame : MonoBehaviour {
     public void updatetimer()
     {
         timechange += Time.deltaTime;
-        if (timechange > 0.75f) // time interval of 1.5 seconds
+        if (timechange > 2f) // time interval of 4 seconds
         {
             timechange = 0;
             TimerEventProcessor();
