@@ -105,6 +105,13 @@ public class BigAlGame : MonoBehaviour {
     public float newfivetimer;
     public float neweventimer;
 
+    [SerializeField] GameObject popupholder; //Popups
+    [SerializeField] GameObject popupcanvas; //PopupCanvas
+    [SerializeField] Popupbox Popupbox;
+    [SerializeField] FFForm FFForm;
+    [SerializeField] GameObject introcanvas;
+    [SerializeField] GameObject howtocanvas;
+    [SerializeField] GameObject FFcanvas;
 
     public void Start()
     {
@@ -165,15 +172,17 @@ public class BigAlGame : MonoBehaviour {
         {
             buttonpause_Click();
         }
-        if (!pause && canclick())
+        if (!pause && CanClick(checkClickCooldown: false))
         {
-            checkinput();
+            CheckInput();
             updatetimer();
         }
+
+        if (currentClickCooldown > 0)
+            currentClickCooldown -= Time.deltaTime;
     }
 
-
-    public void setcompassimage()
+    public void SetCompassImage()
     {
         if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.Keypad5) )
         {
@@ -219,9 +228,9 @@ public class BigAlGame : MonoBehaviour {
     }
 
 
-    public void checkinput()
+    public void CheckInput()
     {
-        setcompassimage();
+        SetCompassImage();
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.Keypad5))
         {
             buttonwait_Click();
@@ -263,22 +272,22 @@ public class BigAlGame : MonoBehaviour {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 if (pictureenemy1.GetSpriteRenderer().enabled)
-                    attackbutton1_Click();
+                    attackbutton_Click(1);
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
                 if (pictureenemy2.GetSpriteRenderer().enabled)
-                    attackbutton2_Click();
+                    attackbutton_Click(2);
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
                 if (pictureenemy3.GetSpriteRenderer().enabled)
-                    attackbutton3_Click();
+                    attackbutton_Click(3);
             }
             else if (Input.GetKeyDown(KeyCode.Alpha4))
             {
                 if (pictureenemy4.GetSpriteRenderer().enabled)
-                    attackbutton4_Click();
+                    attackbutton_Click(4);
             }
         }
     }
@@ -420,7 +429,7 @@ public class BigAlGame : MonoBehaviour {
         labelfitness.text = "Fitness: 100%";
         AlGlobalVar.EnergyValue = 100;
         labelenergy.text = "Energy: 100%";
-        AlGlobalVar.algrowspeed = AlGlobalVar.getalgrowspeed();
+        AlGlobalVar.algrowspeed = AlGlobalVar.GetAlGrowSpeed();
         
         // reset location
         alcloc1 = 8; // default al starting location
@@ -449,7 +458,7 @@ public class BigAlGame : MonoBehaviour {
         lvlmap[7, 3] = true;
         string scloc = "" + alcloc1 + alcloc2;
         int scloc2 = int.Parse(scloc);
-        labeldesc.text = "You are " + AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
+        labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
         labeldesc.GetComponent<Text>().color = Color.white;
         labeldesc.fontStyle = FontStyle.Normal;
 
@@ -539,7 +548,7 @@ public class BigAlGame : MonoBehaviour {
             // level
             AlGlobalVar.LevelValue = AlGlobalVar.LevelValue + 1;
             labellevel.text = "Level: " + AlGlobalVar.LevelValue;
-            AlGlobalVar.getalgrowspeed();
+            AlGlobalVar.GetAlGrowSpeed();
 
             // score
             AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 100;
@@ -604,8 +613,6 @@ public class BigAlGame : MonoBehaviour {
 
             Popupbox1 = false;
             Popupbox2 = false;
-            GameObject popupholder = GameObject.Find("Popups");
-            GameObject popupcanvas = AlGlobalVar.FindObject(popupholder, "PopupCanvas");
             bool popped = false;
 
             while (!answered)
@@ -640,9 +647,9 @@ public class BigAlGame : MonoBehaviour {
                 buttonpause.GetComponentInChildren<Text>().color = Color.red;
                 if (!popped) // bugfix - don't re-show popup if answered in prev frame
                 {
-                    GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2);
-                    GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
-                    GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
+                    Popupbox.showPopupbox(message, button1, button2);
+                    Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
+                    Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                     popped = true;
                 }
                 labeldesc.text = "";
@@ -670,9 +677,9 @@ public class BigAlGame : MonoBehaviour {
                             labeldesc.GetComponent<Text>().color = Color.red;
                             labeldesc.fontStyle = FontStyle.Bold; 
                             buttonpause.GetComponentInChildren<Text>().color = Color.red;
-                            GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2);
-                            GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
-                            GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
+                            Popupbox.showPopupbox(message, button1, button2);
+                            Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
+                            Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                             pause = false;
                             labeldesc.text = "";
                             labeldesc.GetComponent<Text>().color = Color.white;
@@ -690,9 +697,9 @@ public class BigAlGame : MonoBehaviour {
                             labeldesc.GetComponent<Text>().color = Color.red;
                             labeldesc.fontStyle = FontStyle.Bold; 
                             buttonpause.GetComponentInChildren<Text>().color = Color.red;
-                            GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2);
-                            GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
-                            GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
+                            Popupbox.showPopupbox(message, button1, button2);
+                            Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
+                            Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                             pause = false;
                             labeldesc.text = "";
                             labeldesc.GetComponent<Text>().color = Color.white;
@@ -704,7 +711,7 @@ public class BigAlGame : MonoBehaviour {
                     {
                         if (Popupbox1) { AlGlobalVar.level2choice = 1; }
                         else { AlGlobalVar.level2choice = 2; }
-                        AlGlobalVar.getalgrowspeed();
+                        AlGlobalVar.GetAlGrowSpeed();
                     }
                     else if (AlGlobalVar.LevelValue == 3)
                     {
@@ -740,19 +747,19 @@ public class BigAlGame : MonoBehaviour {
     void showmother()
     {
         updateAlstats();
-        int imageID = AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").ImageID;
+        int imageID = GameData.Enemies.Find(x => x.Name == "mother Allosaurus").ImageID;
         pictureenemy1.SetSpriteImage("pictureFF" + imageID);
-        labelenemyname1.text = AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").Name;
-        labelenemy1data.text = String.Format("{0:0.00}", AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bFierceness)
-            + "\r\n" + String.Format("{0:0.00}", AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bAgility)
-            + "\r\n" + String.Format("{0:0.00}", AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bEnergy);
-        picturee1energybar.SetRectWidth((int)(40 * (AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bEnergy / AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").Energy)));
+        labelenemyname1.text = GameData.Enemies.Find(x => x.Name == "mother Allosaurus").Name;
+        labelenemy1data.text = String.Format("{0:0.00}", GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bFierceness)
+            + "\r\n" + String.Format("{0:0.00}", GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bAgility)
+            + "\r\n" + String.Format("{0:0.00}", GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bEnergy);
+        picturee1energybar.SetRectWidth((int)(40 * (GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bEnergy / GameData.Enemies.Find(x => x.Name == "mother Allosaurus").Energy)));
         if (picturee1energybar.GetRectWidth() > 40)
             picturee1energybar.SetRectWidth(40);
         picturee1energybar.SetSpriteColor(new Color(0, 1, 0, 1)); // lime
-        picturee1fiercebar.SetRectWidth((int)(40 * (AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bFierceness / 1000)));
-        picturee1agilitybar.SetRectWidth((int)(40 * (AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bAgility)));
-        if (AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").bFierceness > AlGlobalVar.Alfierceness)
+        picturee1fiercebar.SetRectWidth((int)(40 * (GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bFierceness / 1000)));
+        picturee1agilitybar.SetRectWidth((int)(40 * (GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bAgility)));
+        if (GameData.Enemies.Find(x => x.Name == "mother Allosaurus").bFierceness > AlGlobalVar.Alfierceness)
         {
             GetControlByName("labelenemy1" + "data").GetComponent<Text>().color = Color.red;
             picturee1fiercebar.SetSpriteColor(Color.red);
@@ -766,7 +773,7 @@ public class BigAlGame : MonoBehaviour {
         {
             toggleenemy(1);
         }
-        AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").Seen = true;
+        GameData.Enemies.Find(x => x.Name == "mother Allosaurus").Seen = true;
         e1 = "mother Allosaurus";
         enemylist[0] = "mother Allosaurus";
         int count = 0;
@@ -833,24 +840,25 @@ public class BigAlGame : MonoBehaviour {
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
             }
             updateAlstats();
-            dobattle(AlGlobalVar.Enemies.Find(x => x.Name == enemylist[enemynum - 1]), enemynums, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+            dobattle(GameData.Enemies.Find(x => x.Name == enemylist[enemynum - 1]), enemynums, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
             updateAlstats();
             generateenemies();
             labeldesc.text = "Bad luck! The female attacked you and left.";
         }
     }
+
     IEnumerator domatingQuestion(int enemynum, string enemynums)
     {
         Popupbox1 = false;
         Popupbox2 = false;
         Popupbox3 = false;
         Popupbox4 = false;
-        int ques = random.Next(AlGlobalVar.PQs.Count);
-        string message = "The Allosaurus is willing to mate... \r\nif you can answer this paleontology question correctly!\r\n" + AlGlobalVar.PQs[ques].Question;
-        string button1 = AlGlobalVar.PQs[ques].A1;
-        string button2 = AlGlobalVar.PQs[ques].A2;
-        string button3 = AlGlobalVar.PQs[ques].A3;
-        string button4 = AlGlobalVar.PQs[ques].A4;
+        int ques = random.Next(GameData.PQs.Count);
+        string message = "The Allosaurus is willing to mate... \r\nif you can answer this paleontology question correctly!\r\n" + GameData.PQs[ques].Question;
+        string button1 = GameData.PQs[ques].A1;
+        string button2 = GameData.PQs[ques].A2;
+        string button3 = GameData.PQs[ques].A3;
+        string button4 = GameData.PQs[ques].A4;
         pause = true;
         labeldesc.text = "Game paused.";
         labeldesc.GetComponent<Text>().color = Color.red;
@@ -863,20 +871,20 @@ public class BigAlGame : MonoBehaviour {
         {
             if (!popped) // only display popup when starting
             {
-                GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2, button3, button4);
-                GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
-                GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
-                GameObject.Find("GameController").GetComponent<Popupbox>().Button3Clicked += new EventHandler(frm_Button3Clicked);
-                GameObject.Find("GameController").GetComponent<Popupbox>().Button4Clicked += new EventHandler(frm_Button4Clicked);
+                Popupbox.showPopupbox(message, button1, button2, button3, button4);
+                Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
+                Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
+                Popupbox.Button3Clicked += new EventHandler(frm_Button3Clicked);
+                Popupbox.Button4Clicked += new EventHandler(frm_Button4Clicked);
                 popped = true;
             }
             if (Popupbox1 || Popupbox2 || Popupbox3 || Popupbox4) // player has answered
             {
                 answered = true;
-                if ((Popupbox1 && AlGlobalVar.PQs[ques].Answer == "1")
-                    || (Popupbox2 && AlGlobalVar.PQs[ques].Answer == "2")
-                    || (Popupbox3 && AlGlobalVar.PQs[ques].Answer == "3")
-                    || (Popupbox4 && AlGlobalVar.PQs[ques].Answer == "4"))
+                if ((Popupbox1 && GameData.PQs[ques].Answer == "1")
+                    || (Popupbox2 && GameData.PQs[ques].Answer == "2")
+                    || (Popupbox3 && GameData.PQs[ques].Answer == "3")
+                    || (Popupbox4 && GameData.PQs[ques].Answer == "4"))
                 {
                     AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 200;
                     labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
@@ -913,7 +921,7 @@ public class BigAlGame : MonoBehaviour {
                         currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                     }
                     updateAlstats();
-                    dobattle(AlGlobalVar.Enemies.Find(x => x.Name == enemylist[enemynum - 1]), enemynums, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+                    dobattle(GameData.Enemies.Find(x => x.Name == enemylist[enemynum - 1]), enemynums, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
                     updateAlstats();
                     generateenemies();
                     labeldesc.text = "Incorrect answer! The female attacked you and left.";
@@ -1080,7 +1088,7 @@ public class BigAlGame : MonoBehaviour {
             {
                 string smloc = "" + ml1 + ml2;
                 int smloc2 = int.Parse(smloc);
-                int newZone = AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, smloc2) >= 0).Zone;
+                int newZone = GameData.Zones.Find(x => Array.IndexOf(x.Maps, smloc2) >= 0).Zone;
                 int[] validZones = new int[] { 1, 2, 21, 8 };
                 if (validZones.Contains(newZone))
                 {
@@ -1125,7 +1133,7 @@ public class BigAlGame : MonoBehaviour {
                 toggleenemy(4);
             int cloc1old = alcloc1;
             int cloc2old = alcloc2;
-            AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - (5 * AlGlobalVar.getalgrowspeed());
+            AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - (5 * AlGlobalVar.GetAlGrowSpeed());
             labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
             if (AlGlobalVar.EnergyValue < 40)
             {
@@ -1164,15 +1172,15 @@ public class BigAlGame : MonoBehaviour {
                 string scloc = "" + alcloc1 + alcloc2;
                 int scloc2 = int.Parse(scloc);
                 if (AlGlobalVar.LevelValue < 2
-                    && AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone == 3) //river
+                    && GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone == 3) //river
                 {
                     AlGlobalVar.EnergyValue = 0;
                     AlGlobalVar.FitnessValue = 0;
                     gameover("You have been swept away!\r\nYou were too small to cross the river.");
                 }
                 else if (AlGlobalVar.LevelValue > 2
-                    && AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone == 4
-                    && AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, sclocold2) >= 0).Zone == 4) //swamp
+                    && GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone == 4
+                    && GameData.Zones.Find(x => Array.IndexOf(x.Maps, sclocold2) >= 0).Zone == 4) //swamp
                 {
                     AlGlobalVar.EnergyValue = 0;
                     AlGlobalVar.FitnessValue = 0;
@@ -1180,7 +1188,7 @@ public class BigAlGame : MonoBehaviour {
                 }
                 else
                 {
-                    labeldesc.text = "You are " + AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
+                    labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
                     labeldesc.GetComponent<Text>().color = Color.white;
                     labeldesc.fontStyle = FontStyle.Normal; 
                     generateenemies();
@@ -1208,9 +1216,9 @@ public class BigAlGame : MonoBehaviour {
                         string message = "Congratulations! You've explored the whole map!\r\nScore bonus: 2000 points";
                         string button1 = "Okay!";
                         string button2 = "";
-                        GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2);
-                        GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
-                        GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
+                        Popupbox.showPopupbox(message, button1, button2);
+                        Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
+                        Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                         pause = false;
                         labeldesc.text = "";
                         labeldesc.GetComponent<Text>().color = Color.white;
@@ -1257,7 +1265,7 @@ public class BigAlGame : MonoBehaviour {
     {
         string scloc = "" + cloc1 + cloc2;
         int scloc2 = int.Parse(scloc);
-        int currZone = AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone;
+        int currZone = GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone;
         pictureBox1.SetSpriteImage("zone" + currZone);
     }
     #endregion movement
@@ -1309,10 +1317,10 @@ public class BigAlGame : MonoBehaviour {
                 }
                 string scloc = "" + alcloc1 + alcloc2;
                 int scloc2 = int.Parse(scloc);
-                labeldesc.text = "You are " + AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
+                labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
                 labeldesc.GetComponent<Text>().color = Color.white;
                 labeldesc.fontStyle = FontStyle.Normal; 
-                AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - (5 * AlGlobalVar.getalgrowspeed());
+                AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - (5 * AlGlobalVar.GetAlGrowSpeed());
                 labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
                 if (AlGlobalVar.EnergyValue < 40)
                 {
@@ -1344,12 +1352,12 @@ public class BigAlGame : MonoBehaviour {
                     string enemynum = "" + b;
                     if (currenemies[a] != "Missingno")
                     {
-                        if (AlGlobalVar.Enemies.Find(x => x.Name == currenemies[a]).Fierceness > AlGlobalVar.Alfierceness)
+                        if (GameData.Enemies.Find(x => x.Name == currenemies[a]).Fierceness > AlGlobalVar.Alfierceness)
                         {
                             if (e1 != "mother Allosaurus" || mumknows == false)
                             {
                                 attacked = true;
-                                dobattle(AlGlobalVar.Enemies.Find(x => x.Name == currenemies[a]), enemynum, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+                                dobattle(GameData.Enemies.Find(x => x.Name == currenemies[a]), enemynum, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
                                 updateAlstats();
                             }
                         }
@@ -1363,7 +1371,7 @@ public class BigAlGame : MonoBehaviour {
                 }
                 if (AlGlobalVar.LevelValue == 3
                     && (currenemies.Contains("Allosaurus (male)") || currenemies.Contains("Allosaurus (female)"))
-                    && AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone == 7)
+                    && GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone == 7)
                 {
                     int cps = currpacksize;
                     for (int a = 0; a < 4; a++)
@@ -1398,8 +1406,12 @@ public class BigAlGame : MonoBehaviour {
     {
         if (pause == false)
         {
-            if (alcloc1 > 1)
-                moveAl(-1, 0);
+            if (CanClick())
+            {
+                ActivateClickCooldown();
+                if (alcloc1 > 1)
+                    moveAl(-1, 0);
+            }
         }
     }
     public void buttonwest_Click()
@@ -1465,8 +1477,9 @@ public class BigAlGame : MonoBehaviour {
     {
         if (!gameovercheck)
         {
-            if (canclick())
+            if (CanClick())
             {
+                ActivateClickCooldown();
                 pause = !pause;
                 if (pause)
                 {
@@ -1489,8 +1502,9 @@ public class BigAlGame : MonoBehaviour {
 
     public void buttonrestartlvl_Click()
     {
-        if (canclick())
+        if (CanClick())
         {
+            ActivateClickCooldown();
             // reset vars
             gameovercheck = false;
             pause = false;
@@ -1611,8 +1625,9 @@ public class BigAlGame : MonoBehaviour {
 
     public void buttonrestartg_Click()
     {
-        if (canclick())
+        if (CanClick())
         {
+            ActivateClickCooldown();
             gameovercheck = false;
             clearenemies();
             e1 = "Missingno";
@@ -1664,14 +1679,8 @@ public class BigAlGame : MonoBehaviour {
         Application.Quit();
     }
 
-
     public void buttonFFs_Click()
     {
-        GameObject popupholder = GameObject.Find("Popups");
-        GameObject FFcanvas = AlGlobalVar.FindObject(popupholder, "FFCanvas");
-        GameObject popupcanvas = AlGlobalVar.FindObject(popupholder, "PopupCanvas");
-        GameObject introcanvas = AlGlobalVar.FindObject(popupholder, "IntroscreenCanvas");
-        GameObject howtocanvas = AlGlobalVar.FindObject(popupholder, "HowToscreenCanvas");
         if (!FFcanvas.activeSelf && !popupcanvas.activeSelf && !introcanvas.activeSelf && !howtocanvas.activeSelf)
         {
             pause = true;
@@ -1679,14 +1688,13 @@ public class BigAlGame : MonoBehaviour {
             labeldesc.GetComponent<Text>().color = Color.red;
             labeldesc.fontStyle = FontStyle.Bold;  
             AlGlobalVar.currFF = enemylist[0];
-            GameObject.Find("GameController").GetComponent<FFForm>().showFFForm();
+            FFForm.showFFForm();
             pause = false;
             labeldesc.text = "";
             labeldesc.GetComponent<Text>().color = Color.white;
             labeldesc.fontStyle = FontStyle.Normal; 
         }
     }
-
 
     public void showFF(int enemynum)
     {
@@ -1696,7 +1704,7 @@ public class BigAlGame : MonoBehaviour {
         labeldesc.fontStyle = FontStyle.Bold; 
         buttonpause.GetComponentInChildren<Text>().color = Color.red;
         AlGlobalVar.currFF = enemylist[enemynum];
-        GameObject.Find("GameController").GetComponent<FFForm>().showFFForm();
+        FFForm.showFFForm();
         pause = false;
         labeldesc.text = "";
         labeldesc.GetComponent<Text>().color = Color.white;
@@ -1707,8 +1715,9 @@ public class BigAlGame : MonoBehaviour {
 
     public void FFbutton1_Click()
     {
-        if (canclick())
+        if (CanClick())
         {
+            ActivateClickCooldown();
             if (enemylist[0] == "Missingno")
             { }
             else if (enemylist[0] == "Allosaurus (female)" && AlGlobalVar.LevelValue == 4)
@@ -1723,8 +1732,9 @@ public class BigAlGame : MonoBehaviour {
     }
     public void FFbutton2_Click()
     {
-        if (canclick())
+        if (CanClick())
         {
+            ActivateClickCooldown();
             if (enemylist[1] == "Missingno")
             { }
             else if (enemylist[1] == "Allosaurus (female)" && AlGlobalVar.LevelValue == 4)
@@ -1739,8 +1749,9 @@ public class BigAlGame : MonoBehaviour {
     }
     public void FFbutton3_Click()
     {
-        if (canclick())
+        if (CanClick())
         {
+            ActivateClickCooldown();
             if (enemylist[2] == "Missingno")
             { }
             else if (enemylist[2] == "Allosaurus (female)" && AlGlobalVar.LevelValue == 4)
@@ -1755,8 +1766,9 @@ public class BigAlGame : MonoBehaviour {
     }
     public void FFbutton4_Click()
     {
-        if (canclick())
+        if (CanClick())
         {
+            ActivateClickCooldown();
             if (enemylist[3] == "Missingno")
             { }
             else if (enemylist[3] == "Allosaurus (female)" && AlGlobalVar.LevelValue == 4)
@@ -1769,43 +1781,34 @@ public class BigAlGame : MonoBehaviour {
             }
         }
     }
-
-
-    public bool canclick()
+    
+    public bool CanClick(bool checkClickCooldown = true)
     {
-        GameObject popupholder = GameObject.Find("Popups");
-        GameObject FFcanvas = AlGlobalVar.FindObject(popupholder, "FFCanvas");
-        GameObject popupcanvas = AlGlobalVar.FindObject(popupholder, "PopupCanvas");
-        GameObject introcanvas = AlGlobalVar.FindObject(popupholder, "IntroscreenCanvas");
-        GameObject howtocanvas = AlGlobalVar.FindObject(popupholder, "HowToscreenCanvas");
-        if (!FFcanvas.activeSelf && !popupcanvas.activeSelf && !introcanvas.activeSelf && !howtocanvas.activeSelf)
+        if ((!checkClickCooldown || currentClickCooldown <= 0)
+            && !FFcanvas.activeSelf && !popupcanvas.activeSelf && !introcanvas.activeSelf && !howtocanvas.activeSelf)
+        {
+            currentClickCooldown = checkClickCooldown ? 0 : currentClickCooldown;
             return true;
+        }
         else
             return false;
     }
 
-
-    public void attackbutton1_Click()
+    private void ActivateClickCooldown()
     {
-        if (canclick())
-            doattack("1");
-    }
-    public void attackbutton2_Click()
-    {
-        if (canclick())
-            doattack("2");
-    }
-    public void attackbutton3_Click()
-    {
-        if (canclick())
-            doattack("3");
-    }
-    public void attackbutton4_Click()
-    {
-        if (canclick())
-            doattack("4");
+        currentClickCooldown = clickCooldownTime;
     }
 
+    float clickCooldownTime = 0.1f; //don't allow >10 clicks per second
+    float currentClickCooldown = 0f;
+    public void attackbutton_Click(int buttonNum)
+    {
+        if (CanClick())
+        {
+            ActivateClickCooldown();
+            doattack(buttonNum.ToString());
+        }
+    }
 
     private void doattack(string enemynum)
     {
@@ -1852,7 +1855,7 @@ public class BigAlGame : MonoBehaviour {
                 Int32.TryParse(enemynum, out enumint);
                 string[] earray = new string[] { e1, e2, e3, e4 };
                 if (AlGlobalVar.FitnessValue > 0)
-                    dobattle(AlGlobalVar.Enemies.Find(x => x.Name == earray[enumint - 1]), enemynum, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+                    dobattle(GameData.Enemies.Find(x => x.Name == earray[enumint - 1]), enemynum, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
                 for (int a = 0; a < 4; a++)
                 {
                     int b = a + 1;
@@ -1860,13 +1863,13 @@ public class BigAlGame : MonoBehaviour {
                     if (earray[a] != "Missingno")
                     {
                         // al gets attacked if:
-                        if (AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bFierceness > AlGlobalVar.Alfierceness // enemy more fierce
+                        if (GameData.Enemies.Find(x => x.Name == earray[a]).bFierceness > AlGlobalVar.Alfierceness // enemy more fierce
                             && (e1 != "mother Allosaurus" || mumknows == false) // mum isn't there or doesn't know al
                             && (earray.Contains("Diplodocus") && currpacksize > 0) == false) // not hunting a diplo
                         {
                             atkdone = false;
                             if (allevelup == false)
-                                dobattle(AlGlobalVar.Enemies.Find(x => x.Name == earray[a]), enemy2num, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+                                dobattle(GameData.Enemies.Find(x => x.Name == earray[a]), enemy2num, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
                             updateAlstats();
                         }
                     }
@@ -1895,8 +1898,7 @@ public class BigAlGame : MonoBehaviour {
         enemylist.Add("Missingno");
         enemylist.Add("Missingno");
     }
-
-
+    
     public void clearenemies()
     {
         if (enemylist[0] != "Missingno" && pictureenemy1.GetSpriteRenderer().enabled == true)
@@ -1964,7 +1966,7 @@ public class BigAlGame : MonoBehaviour {
                 damage = 0.75 * ((0.5 * alfierceness) / (Enemy.bFierceness + 0.1)) * (alhealth / 9) + (1000 * currpacksize / 4);
                 Enemy.bEnergy = Enemy.bEnergy - damage;
             }
-            else if (currpacksize > 0 && AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, zcloc2) >= 0).Zone != 7) // if hunting away from the mig path, pack leaves
+            else if (currpacksize > 0 && GameData.Zones.Find(x => Array.IndexOf(x.Maps, zcloc2) >= 0).Zone != 7) // if hunting away from the mig path, pack leaves
             {
                 damage = 0.75 * ((0.5 * alfierceness) / (Enemy.bFierceness + 0.1)) * (alhealth / 9);
                 Enemy.bEnergy = Enemy.bEnergy - damage;
@@ -2065,7 +2067,7 @@ public class BigAlGame : MonoBehaviour {
 
     void EnemyDefeated(AlEnemies Enemy, string enemynum)
     {
-        AlGlobalVar.Enemies.Find(x => x.Name == Enemy.Name).bEnergy = AlGlobalVar.Enemies.Find(x => x.Name == Enemy.Name).Energy;
+        GameData.Enemies.Find(x => x.Name == Enemy.Name).bEnergy = GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy;
         if (enemynum == "1")
         {
             toggleenemy(1);
@@ -2092,10 +2094,10 @@ public class BigAlGame : MonoBehaviour {
         }
         labeldesc.text = labeldesc.text + "\r\nYou have killed the " + Enemy.Name + "!\r\nYou ate the " + Enemy.Name + ". \r\nKeep growing!";
         labeldesc.GetComponent<Text>().color = Color.white;
-        AlGlobalVar.WeightValue = AlGlobalVar.WeightValue + (AlGlobalVar.Enemies.Find(x => x.Name == Enemy.Name).Energy / 10) * AlGlobalVar.getalgrowspeed();
+        AlGlobalVar.WeightValue = AlGlobalVar.WeightValue + (GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy / 10) * AlGlobalVar.GetAlGrowSpeed();
         AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue
-            + (int)(AlGlobalVar.Enemies.Find(x => x.Name == Enemy.Name).Energy / 100
-            + AlGlobalVar.Enemies.Find(x => x.Name == Enemy.Name).Fierceness / 10);
+            + (int)(GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy / 100
+            + GameData.Enemies.Find(x => x.Name == Enemy.Name).Fierceness / 10);
         labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
         if (AlGlobalVar.LevelValue == 1 && AlGlobalVar.WeightValue > 100)
         {
@@ -2121,8 +2123,8 @@ public class BigAlGame : MonoBehaviour {
             labeldesc.GetComponent<Text>().color = Color.red;
             labeldesc.fontStyle = FontStyle.Bold;
             buttonpause.GetComponentInChildren<Text>().color = Color.red;
-            GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, "");
-            GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
+            Popupbox.showPopupbox(message, button1, "");
+            Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
             pause = false;
             labeldesc.text = "";
             labeldesc.GetComponent<Text>().color = Color.white;
@@ -2148,8 +2150,8 @@ public class BigAlGame : MonoBehaviour {
         string scloc = "" + alcloc1 + alcloc2;
         int scloc2 = int.Parse(scloc);
         AlGlobalVar.FitnessValue = AlGlobalVar.FitnessValue + 10
-            * (AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone / (AlGlobalVar.LevelValue * 2))
-            * AlGlobalVar.getalgrowspeed();
+            * (GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone / (AlGlobalVar.LevelValue * 2))
+            * AlGlobalVar.GetAlGrowSpeed();
         if (AlGlobalVar.FitnessValue > 100)
             AlGlobalVar.FitnessValue = 100;
         labelfitness.text = "Fitness: " + AlGlobalVar.FitnessValue + "%";
@@ -2175,8 +2177,8 @@ public class BigAlGame : MonoBehaviour {
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
         }
         AlGlobalVar.EnergyValue = Math.Min(AlGlobalVar.EnergyValue + 20, Math.Ceiling(AlGlobalVar.EnergyValue + 10
-            * ((AlGlobalVar.Enemies.Find(x => x.Name == Enemy.Name).Energy / AlGlobalVar.WeightValue) + 3
-            * (((alcloc2 - alcloc1) + 10) / (AlGlobalVar.LevelValue))) * AlGlobalVar.getalgrowspeed()));
+            * ((GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy / AlGlobalVar.WeightValue) + 3
+            * (((alcloc2 - alcloc1) + 10) / (AlGlobalVar.LevelValue))) * AlGlobalVar.GetAlGrowSpeed()));
         if (AlGlobalVar.EnergyValue > 100)
             AlGlobalVar.EnergyValue = 100;
         labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
@@ -2225,31 +2227,31 @@ public class BigAlGame : MonoBehaviour {
             eflavtext = "\r\nYou can see ";
         if (e1 != "Missingno")
         {
-            eflavtext = eflavtext + AlGlobalVar.Enemies.Find(x => x.Name == e1).textName + AlGlobalVar.Enemies.Find(x => x.Name == e1).Name + AlGlobalVar.Enemies.Find(x => x.Name == e1).Flavtext;
+            eflavtext = eflavtext + GameData.Enemies.Find(x => x.Name == e1).textName + GameData.Enemies.Find(x => x.Name == e1).Name + GameData.Enemies.Find(x => x.Name == e1).Flavtext;
             count = count - 1;
             eflavtext = appendflavourtext(eflavtext, count);
         }
         if (e2 != "Missingno")
         {
-            eflavtext = eflavtext + AlGlobalVar.Enemies.Find(x => x.Name == e2).textName + AlGlobalVar.Enemies.Find(x => x.Name == e2).Name + AlGlobalVar.Enemies.Find(x => x.Name == e2).Flavtext;
+            eflavtext = eflavtext + GameData.Enemies.Find(x => x.Name == e2).textName + GameData.Enemies.Find(x => x.Name == e2).Name + GameData.Enemies.Find(x => x.Name == e2).Flavtext;
             count = count - 1;
             eflavtext = appendflavourtext(eflavtext, count);
         }
         if (e3 != "Missingno")
         {
-            eflavtext = eflavtext + AlGlobalVar.Enemies.Find(x => x.Name == e3).textName + AlGlobalVar.Enemies.Find(x => x.Name == e3).Name + AlGlobalVar.Enemies.Find(x => x.Name == e3).Flavtext;
+            eflavtext = eflavtext + GameData.Enemies.Find(x => x.Name == e3).textName + GameData.Enemies.Find(x => x.Name == e3).Name + GameData.Enemies.Find(x => x.Name == e3).Flavtext;
             count = count - 1;
             eflavtext = appendflavourtext(eflavtext, count);
         }
         if (e4 != "Missingno")
         {
-            eflavtext = eflavtext + AlGlobalVar.Enemies.Find(x => x.Name == e4).textName + AlGlobalVar.Enemies.Find(x => x.Name == e4).Name + AlGlobalVar.Enemies.Find(x => x.Name == e4).Flavtext;
+            eflavtext = eflavtext + GameData.Enemies.Find(x => x.Name == e4).textName + GameData.Enemies.Find(x => x.Name == e4).Name + GameData.Enemies.Find(x => x.Name == e4).Flavtext;
             count = count - 1;
             eflavtext = appendflavourtext(eflavtext, count);
         }
         string scloc = "" + alcloc1 + alcloc2;
         int scloc2 = int.Parse(scloc);
-        labeldesc.text = "You are " + AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
+        labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
         labeldesc.text = labeldesc.text + eflavtext;
         #endregion flavourtext
     }
@@ -2276,26 +2278,26 @@ public class BigAlGame : MonoBehaviour {
         clearenemies();
 
         // reset enemy stats
-        for (int a = 0; a < AlGlobalVar.Enemies.Count; a++)
+        for (int a = 0; a < GameData.Enemies.Count; a++)
         {
-            if (AlGlobalVar.Enemies[a].Name != "mother Allosaurus")
+            if (GameData.Enemies[a].Name != "mother Allosaurus")
             {
-                AlGlobalVar.Enemies[a].bEnergy = (double)random.Next(Convert.ToInt32(AlGlobalVar.Enemies[a].Energy - AlGlobalVar.Enemies[a].Energy * 0.2),
-                    Convert.ToInt32(AlGlobalVar.Enemies[a].Energy + AlGlobalVar.Enemies[a].Energy * 0.2))
-                    + AlGlobalVar.Enemies[a].Energy * 0.4 * ((alcloc2 - alcloc1) / 17);
-                AlGlobalVar.Enemies[a].bAgility = AlGlobalVar.Enemies[a].Agility
-                    + AlGlobalVar.Enemies[a].Agility * 0.4 * ((alcloc2 - alcloc1) / 17);
-                AlGlobalVar.Enemies[a].bFierceness = (double)random.Next(Convert.ToInt32(AlGlobalVar.Enemies[a].Fierceness - AlGlobalVar.Enemies[a].Fierceness * 0.2),
-                    Convert.ToInt32(AlGlobalVar.Enemies[a].Fierceness + AlGlobalVar.Enemies[a].Fierceness * 0.2))
-                    + AlGlobalVar.Enemies[a].Fierceness * 0.4 * ((alcloc2 - alcloc1) / 17);
+                GameData.Enemies[a].bEnergy = (double)random.Next(Convert.ToInt32(GameData.Enemies[a].Energy - GameData.Enemies[a].Energy * 0.2),
+                    Convert.ToInt32(GameData.Enemies[a].Energy + GameData.Enemies[a].Energy * 0.2))
+                    + GameData.Enemies[a].Energy * 0.4 * ((alcloc2 - alcloc1) / 17);
+                GameData.Enemies[a].bAgility = GameData.Enemies[a].Agility
+                    + GameData.Enemies[a].Agility * 0.4 * ((alcloc2 - alcloc1) / 17);
+                GameData.Enemies[a].bFierceness = (double)random.Next(Convert.ToInt32(GameData.Enemies[a].Fierceness - GameData.Enemies[a].Fierceness * 0.2),
+                    Convert.ToInt32(GameData.Enemies[a].Fierceness + GameData.Enemies[a].Fierceness * 0.2))
+                    + GameData.Enemies[a].Fierceness * 0.4 * ((alcloc2 - alcloc1) / 17);
             }
         }
 
         // generate new enemies
         string scloc = "" + alcloc1 + alcloc2;
         int scloc2 = int.Parse(scloc);
-        int currZone = AlGlobalVar.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone;
-        List<AlEnemies> CurrEnemies = AlGlobalVar.Enemies.FindAll(x => (x.CommonZone1 == currZone) || (x.CommonZone2 == currZone));
+        int currZone = GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Zone;
+        List<AlEnemies> CurrEnemies = GameData.Enemies.FindAll(x => (x.CommonZone1 == currZone) || (x.CommonZone2 == currZone));
         List<string> possEnemies = new List<string>
         {
             "Missingno"
@@ -2308,7 +2310,7 @@ public class BigAlGame : MonoBehaviour {
         {
             possEnemies.Add(CurrEnemies[a].Name);
         };
-        CurrEnemies.AddRange(AlGlobalVar.Enemies.FindAll(x => (x.RareZone1 == currZone) || (x.RareZone2 == currZone)));
+        CurrEnemies.AddRange(GameData.Enemies.FindAll(x => (x.RareZone1 == currZone) || (x.RareZone2 == currZone)));
         for (int a = CurrEnemies.Count - 1; a >= 0; a--)
         {
             possEnemies.Add(CurrEnemies[a].Name);
@@ -2325,7 +2327,7 @@ public class BigAlGame : MonoBehaviour {
         CurrEnemies.RemoveAll(e => e.Name != "");
         for (int a = possEnemies.Count - 1; a >= 0; a--)
         {
-            CurrEnemies.Add(AlGlobalVar.Enemies.Find(x => x.Name == possEnemies[a]));
+            CurrEnemies.Add(GameData.Enemies.Find(x => x.Name == possEnemies[a]));
         };
         int disappear1 = random.Next(0, CurrEnemies.Count);
         int disappear2 = random.Next(0, CurrEnemies.Count);
@@ -2346,10 +2348,10 @@ public class BigAlGame : MonoBehaviour {
         enemylist.Add(e3);
         enemylist.Add(e4);
         CurrEnemies.RemoveAll(item => 1 == 1);
-        CurrEnemies.Add(AlGlobalVar.Enemies.Find(x => x.Name == e1));
-        CurrEnemies.Add(AlGlobalVar.Enemies.Find(x => x.Name == e2));
-        CurrEnemies.Add(AlGlobalVar.Enemies.Find(x => x.Name == e3));
-        CurrEnemies.Add(AlGlobalVar.Enemies.Find(x => x.Name == e4));
+        CurrEnemies.Add(GameData.Enemies.Find(x => x.Name == e1));
+        CurrEnemies.Add(GameData.Enemies.Find(x => x.Name == e2));
+        CurrEnemies.Add(GameData.Enemies.Find(x => x.Name == e3));
+        CurrEnemies.Add(GameData.Enemies.Find(x => x.Name == e4));
         for (int a = CurrEnemies.Count - 1; a >= 0; a--)
         {
             if (enemylist[a] == "Missingno")
@@ -2375,19 +2377,19 @@ public class BigAlGame : MonoBehaviour {
                 FormsObject picturee0energybar = new FormsObject(GetControlByName("picturee" + b + "energybar").name);
                 FormsObject picturee0fiercebar = new FormsObject(GetControlByName("picturee" + b + "fiercebar").name);
                 FormsObject picturee0agilitybar = new FormsObject(GetControlByName("picturee" + b + "agilitybar").name);
-                int imageID = AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).ImageID;
+                int imageID = GameData.Enemies.Find(x => x.Name == earray[a]).ImageID;
                 GetControlByName("pictureenemy" + b).GetComponent<SpriteRenderer>().sprite = Resources.Load("pictureFF" + imageID, typeof(Sprite)) as Sprite;
-                GetControlByName("labelenemyname" + b).GetComponent<Text>().text = AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).Name;
-                GetControlByName("labelenemy" + b + "data").GetComponent<Text>().text = String.Format("{0:0.00}", AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bFierceness)
-                    + "\r\n" + String.Format("{0:0.00}", AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bAgility)
-                    + "\r\n" + String.Format("{0:0.00}", AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bEnergy);
-                picturee0energybar.SetRectWidth((int)(40 * (AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bEnergy / AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).Energy)));
+                GetControlByName("labelenemyname" + b).GetComponent<Text>().text = GameData.Enemies.Find(x => x.Name == earray[a]).Name;
+                GetControlByName("labelenemy" + b + "data").GetComponent<Text>().text = String.Format("{0:0.00}", GameData.Enemies.Find(x => x.Name == earray[a]).bFierceness)
+                    + "\r\n" + String.Format("{0:0.00}", GameData.Enemies.Find(x => x.Name == earray[a]).bAgility)
+                    + "\r\n" + String.Format("{0:0.00}", GameData.Enemies.Find(x => x.Name == earray[a]).bEnergy);
+                picturee0energybar.SetRectWidth((int)(40 * (GameData.Enemies.Find(x => x.Name == earray[a]).bEnergy / GameData.Enemies.Find(x => x.Name == earray[a]).Energy)));
                 if (picturee0energybar.GetRectWidth() > 40)
                     picturee0energybar.SetRectWidth(40);
                 picturee0energybar.SetSpriteColor(new Color(0, 1, 0, 1)); // lime
-            picturee0fiercebar.SetRectWidth((int)(40 * (AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bFierceness / 1000)));
-                picturee0agilitybar.SetRectWidth((int)(40 * (AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bAgility)));
-                if (AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bFierceness > AlGlobalVar.Alfierceness)
+            picturee0fiercebar.SetRectWidth((int)(40 * (GameData.Enemies.Find(x => x.Name == earray[a]).bFierceness / 1000)));
+                picturee0agilitybar.SetRectWidth((int)(40 * (GameData.Enemies.Find(x => x.Name == earray[a]).bAgility)));
+                if (GameData.Enemies.Find(x => x.Name == earray[a]).bFierceness > AlGlobalVar.Alfierceness)
                 {
                     GetControlByName("labelenemy" + b + "data").GetComponent<Text>().color = Color.red;
                     picturee0fiercebar.SetSpriteColor(Color.red);
@@ -2408,7 +2410,7 @@ public class BigAlGame : MonoBehaviour {
                     else if (b == 4)
                         toggleenemy(4);
                 }
-                AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).Seen = true;
+                GameData.Enemies.Find(x => x.Name == earray[a]).Seen = true;
                 if (earray[a] == "Allosaurus (female)" && AlGlobalVar.LevelValue == 4)
                 {
                     GetControlByName("FFbutton" + b).GetComponentInChildren<Text>().text = "Mate";
@@ -2441,15 +2443,15 @@ public class BigAlGame : MonoBehaviour {
 
             // 'seen all' bonus
             int seencount = 0;
-            for (int s = 0; s < AlGlobalVar.Enemies.Count; s++)
+            for (int s = 0; s < GameData.Enemies.Count; s++)
             {
-                if (AlGlobalVar.Enemies[s].Seen == true)
+                if (GameData.Enemies[s].Seen == true)
                 {
                     seencount = seencount + 1;
                 }
             }
-            if (seencount == AlGlobalVar.Enemies.Count && seenbonus == false
-                || (seencount == AlGlobalVar.Enemies.Count - 1 && AlGlobalVar.Enemies.Find(x => x.Name == "mother Allosaurus").Seen == false && seenbonus == false))
+            if (seencount == GameData.Enemies.Count && seenbonus == false
+                || (seencount == GameData.Enemies.Count - 1 && GameData.Enemies.Find(x => x.Name == "mother Allosaurus").Seen == false && seenbonus == false))
             {
                 seenbonus = true;
                 AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue + 1000;
@@ -2462,9 +2464,9 @@ public class BigAlGame : MonoBehaviour {
                 labeldesc.GetComponent<Text>().color = Color.red;
                 labeldesc.fontStyle = FontStyle.Bold; 
                 buttonpause.GetComponentInChildren<Text>().color = Color.red;
-                GameObject.Find("GameController").GetComponent<Popupbox>().showPopupbox(message, button1, button2);
-                GameObject.Find("GameController").GetComponent<Popupbox>().Button1Clicked += new EventHandler(frm_Button1Clicked);
-                GameObject.Find("GameController").GetComponent<Popupbox>().Button2Clicked += new EventHandler(frm_Button2Clicked);
+                Popupbox.showPopupbox(message, button1, button2);
+                Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
+                Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                 pause = false;
                 labeldesc.text = "";
                 labeldesc.GetComponent<Text>().color = Color.white;
@@ -2509,7 +2511,7 @@ public class BigAlGame : MonoBehaviour {
                 if (earray[a] != "Missingno" && earray[a] != "Dinosaur Egg" && earray[a] != "mother Allosaurus")
                 {
                     updateAlstats();
-                    if ((AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bFierceness < AlGlobalVar.Alfierceness || e1 == "mother Allosaurus"))
+                    if ((GameData.Enemies.Find(x => x.Name == earray[a]).bFierceness < AlGlobalVar.Alfierceness || e1 == "mother Allosaurus"))
                     {
                         if (a == 0)
                         {
@@ -2545,13 +2547,13 @@ public class BigAlGame : MonoBehaviour {
                         }
                         labeldesc.text = labeldesc.text + "\r\nThe " + earray[a] + " fled!";
                     }
-                    else if (AlGlobalVar.Enemies.Find(x => x.Name == earray[a]).bFierceness > AlGlobalVar.Alfierceness && (e1 != "mother Allosaurus" || mumknows == false))
+                    else if (GameData.Enemies.Find(x => x.Name == earray[a]).bFierceness > AlGlobalVar.Alfierceness && (e1 != "mother Allosaurus" || mumknows == false))
                     {
                         b = a + 1;
                         string enemynum = "" + b;
                         atkdone = false;
                         if (allevelup == false)
-                            dobattle(AlGlobalVar.Enemies.Find(x => x.Name == earray[a]), enemynum, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
+                            dobattle(GameData.Enemies.Find(x => x.Name == earray[a]), enemynum, AlGlobalVar.Alfierceness, AlGlobalVar.Alagility, AlGlobalVar.Alhealth);
                         updateAlstats();
                     }
                 }

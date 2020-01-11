@@ -78,9 +78,9 @@ public class FFForm : MonoBehaviour
         dropdowncolours.pressedColor = normalcolour4;
         comboBox1.colors = dropdowncolours;
 
-        List<AlEnemies> EnemiesSeen = AlGlobalVar.Enemies.FindAll(x => x.Seen);
+        List<AlEnemies> EnemiesSeen = GameData.Enemies.FindAll(x => x.Seen);
         int seencount = EnemiesSeen.Count;
-        int totalenemies = AlGlobalVar.Enemies.Count;
+        int totalenemies = GameData.Enemies.Count;
         labelcount.text = "You have encountered " + seencount + " out of " + totalenemies + " species in the game.";
 
         comboBox1.options.Clear();
@@ -97,31 +97,31 @@ public class FFForm : MonoBehaviour
         }
         else
         {
-            comboBox1.value = EnemiesSeen.IndexOf(AlGlobalVar.Enemies.Find(x => x.Name == AlGlobalVar.currFF));
+            comboBox1.value = EnemiesSeen.IndexOf(GameData.Enemies.Find(x => x.Name == AlGlobalVar.currFF));
             comboBox1.RefreshShownValue();
 
-            int FFimageID = AlGlobalVar.Enemies.Find(x => x.Name == AlGlobalVar.currFF).ImageID;
+            int FFimageID = GameData.Enemies.Find(x => x.Name == AlGlobalVar.currFF).ImageID;
             pictureFF.enabled = true;
             pictureFF.sprite = Resources.Load("pictureFF" + FFimageID, typeof(Sprite)) as Sprite;
 
             labelFF.enabled = true;
-            labelFF.text = AlGlobalVar.AlFactFiles.Find(x => x.Name == AlGlobalVar.currFF).Facts;
+            labelFF.text = GameData.AlFactFiles.Find(x => x.Name == AlGlobalVar.currFF).Facts;
         }
     }
 
     public void comboBox1_SelectedIndexChanged()
     {
-        List<AlEnemies> EnemiesSeen = AlGlobalVar.Enemies.FindAll(x => x.Seen);
+        List<AlEnemies> EnemiesSeen = GameData.Enemies.FindAll(x => x.Seen);
 
        string FFitem = EnemiesSeen[comboBox1.value].Name;
         AlGlobalVar.currFF = FFitem;
 
-        int FFimageID = AlGlobalVar.Enemies.Find(x => x.Name == AlGlobalVar.currFF).ImageID;
+        int FFimageID = GameData.Enemies.Find(x => x.Name == AlGlobalVar.currFF).ImageID;
         pictureFF.enabled = true;
         pictureFF.sprite = Resources.Load("pictureFF" + FFimageID, typeof(Sprite)) as Sprite;
 
         labelFF.enabled = true;
-        labelFF.text = AlGlobalVar.AlFactFiles.Find(x => x.Name == AlGlobalVar.currFF).Facts;
+        labelFF.text = GameData.AlFactFiles.Find(x => x.Name == AlGlobalVar.currFF).Facts;
     }
 
     public void CloseButtonClicked()
