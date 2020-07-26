@@ -5,45 +5,22 @@ using UnityEngine.UI;
 
 public class FFForm : MonoBehaviour
 {
-    Canvas thiscanvas;
-    Text labelcount;
-    Text labelFF;
-    Dropdown comboBox1;
-    Image pictureFF;
+    [SerializeField] Canvas thiscanvas;
+    [SerializeField] Text labelcount;
+    [SerializeField] Text labelFF;
+    [SerializeField] Dropdown comboBox1;
+    [SerializeField] Text comboBox1Text;
+    [SerializeField] Image pictureFF;
 
     public GameObject comboBoxtemplate;
 
     public void Awake()
     {
-        GameObject popupholder = GameObject.Find("Popups");
-        thiscanvas = AlGlobalVar.FindObject(popupholder, "FFCanvas").GetComponent<Canvas>();
-
-        labelcount = AlGlobalVar.FindObject(thiscanvas.gameObject, "labelcount").GetComponent<Text>();
-        labelFF = AlGlobalVar.FindObject(thiscanvas.gameObject, "labelFF").GetComponent<Text>();
-
-        pictureFF = AlGlobalVar.FindObject(thiscanvas.gameObject, "pictureFF").GetComponent<Image>();
-        
-        Canvas dropdowncanvas = GameObject.Find("DropdownCanvas").GetComponent<Canvas>();
-        comboBox1 = AlGlobalVar.FindObject(dropdowncanvas.gameObject, "comboBox1").GetComponent<Dropdown>();
-
-        Color textcolour = comboBox1.GetComponentInChildren<Text>().color;
+        Color textcolour = comboBox1Text.color;
         textcolour.a = 0;
-        comboBox1.GetComponentInChildren<Text>().color = textcolour;
+        comboBox1Text.color = textcolour;
 
-        ColorBlock dropdowncolours = comboBox1.colors;
-        Color normalcolour = comboBox1.colors.disabledColor;
-        Color normalcolour2 = comboBox1.colors.highlightedColor;
-        Color normalcolour3 = comboBox1.colors.normalColor;
-        Color normalcolour4 = comboBox1.colors.pressedColor;
-        normalcolour.a = 0;
-        normalcolour2.a = 0;
-        normalcolour3.a = 0;
-        normalcolour4.a = 0;
-        dropdowncolours.disabledColor = normalcolour;
-        dropdowncolours.highlightedColor = normalcolour2;
-        dropdowncolours.normalColor = normalcolour3;
-        dropdowncolours.pressedColor = normalcolour4;
-        comboBox1.colors = dropdowncolours;
+        comboBox1.gameObject.SetActive(false);
     }
 
     public void showFFForm()
@@ -59,24 +36,11 @@ public class FFForm : MonoBehaviour
         thiscanvas.gameObject.SetActive(true);
         comboBox1.enabled = true;
 
-        Color textcolour = comboBox1.GetComponentInChildren<Text>().color;
-        textcolour.a = 255;
-        comboBox1.GetComponentInChildren<Text>().color = textcolour;
+        Color textcolour = comboBox1Text.color;
+        textcolour.a = 1;
+        comboBox1Text.color = textcolour;
 
-        ColorBlock dropdowncolours = comboBox1.colors;
-        Color normalcolour = comboBox1.colors.disabledColor;
-        Color normalcolour2 = comboBox1.colors.highlightedColor;
-        Color normalcolour3 = comboBox1.colors.normalColor;
-        Color normalcolour4 = comboBox1.colors.pressedColor;
-        normalcolour.a = 255;
-        normalcolour2.a = 255;
-        normalcolour3.a = 255;
-        normalcolour4.a = 255;
-        dropdowncolours.disabledColor = normalcolour;
-        dropdowncolours.highlightedColor = normalcolour2;
-        dropdowncolours.normalColor = normalcolour3;
-        dropdowncolours.pressedColor = normalcolour4;
-        comboBox1.colors = dropdowncolours;
+        comboBox1.gameObject.SetActive(true);
 
         List<AlEnemies> EnemiesSeen = GameData.Enemies.FindAll(x => x.Seen);
         int seencount = EnemiesSeen.Count;
@@ -128,23 +92,10 @@ public class FFForm : MonoBehaviour
     {
         thiscanvas.gameObject.SetActive(false);
 
-        Color textcolour = comboBox1.GetComponentInChildren<Text>().color;
+        Color textcolour = comboBox1Text.color;
         textcolour.a = 0;
-        comboBox1.GetComponentInChildren<Text>().color = textcolour;
+        comboBox1Text.color = textcolour;
 
-        ColorBlock dropdowncolours = comboBox1.colors;
-        Color normalcolour = comboBox1.colors.disabledColor;
-        Color normalcolour2 = comboBox1.colors.highlightedColor;
-        Color normalcolour3 = comboBox1.colors.normalColor;
-        Color normalcolour4 = comboBox1.colors.pressedColor;
-        normalcolour.a = 0;
-        normalcolour2.a = 0;
-        normalcolour3.a = 0;
-        normalcolour4.a = 0;
-        dropdowncolours.disabledColor = normalcolour;
-        dropdowncolours.highlightedColor = normalcolour2;
-        dropdowncolours.normalColor = normalcolour3;
-        dropdowncolours.pressedColor = normalcolour4;
-        comboBox1.colors = dropdowncolours;
+        comboBox1.gameObject.SetActive(false);
     }
 }

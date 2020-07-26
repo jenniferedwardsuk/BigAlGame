@@ -459,7 +459,7 @@ public class BigAlGame : MonoBehaviour {
         string scloc = "" + alcloc1 + alcloc2;
         int scloc2 = int.Parse(scloc);
         labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
-        labeldesc.GetComponent<Text>().color = Color.white;
+        labeldesc.color = Color.white;
         labeldesc.fontStyle = FontStyle.Normal;
 
         updatelocscreen(alcloc1, alcloc2);
@@ -489,8 +489,8 @@ public class BigAlGame : MonoBehaviour {
         Image currimage2 = picturealenergygreen.GetImage();
         currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
 
-        labelfitness.GetComponent<Text>().color = Color.white;
-        labelenergy.GetComponent<Text>().color = Color.white;
+        labelfitness.color = Color.white;
+        labelenergy.color = Color.white;
 
         // reset al
         AlGlobalVar.LevelValue = 0;
@@ -515,7 +515,7 @@ public class BigAlGame : MonoBehaviour {
     public void gameover(String ftext)
     {
         gameovercheck = true;
-        labeldesc.GetComponent<Text>().color = Color.red;
+        labeldesc.color = Color.red;
         labeldesc.text = "Game Over!\r\nFinal score: " + AlGlobalVar.ScoreValue + "\r\n" + ftext;
         labeldesc.fontStyle = FontStyle.Bold;
     }
@@ -525,7 +525,7 @@ public class BigAlGame : MonoBehaviour {
     {
         pause = true;
         labeldesc.text = "Game paused.";
-        labeldesc.GetComponent<Text>().color = Color.red;
+        labeldesc.color = Color.red;
         labeldesc.fontStyle = FontStyle.Bold;
         buttonpause.GetComponentInChildren<Text>().color = Color.red;
 
@@ -542,7 +542,7 @@ public class BigAlGame : MonoBehaviour {
                 {
                     labeldesc.text = "Level up!";
                 }
-                labeldesc.GetComponent<Text>().color = Color.white;
+                labeldesc.color = Color.white;
                 labeldesc.fontStyle = FontStyle.Normal;
             }
             // level
@@ -642,7 +642,7 @@ public class BigAlGame : MonoBehaviour {
                 }
                 pause = true;
                 labeldesc.text = "Game paused.";
-                labeldesc.GetComponent<Text>().color = Color.red;
+                labeldesc.color = Color.red;
                 labeldesc.fontStyle = FontStyle.Bold; 
                 buttonpause.GetComponentInChildren<Text>().color = Color.red;
                 if (!popped) // bugfix - don't re-show popup if answered in prev frame
@@ -653,7 +653,7 @@ public class BigAlGame : MonoBehaviour {
                     popped = true;
                 }
                 labeldesc.text = "";
-                labeldesc.GetComponent<Text>().color = Color.white;
+                labeldesc.color = Color.white;
                 labeldesc.fontStyle = FontStyle.Normal; 
                 buttonpause.GetComponentInChildren<Text>().color = Color.green;
 
@@ -674,7 +674,7 @@ public class BigAlGame : MonoBehaviour {
                             button2 = "";
                             pause = true;
                             labeldesc.text = "Game paused.";
-                            labeldesc.GetComponent<Text>().color = Color.red;
+                            labeldesc.color = Color.red;
                             labeldesc.fontStyle = FontStyle.Bold; 
                             buttonpause.GetComponentInChildren<Text>().color = Color.red;
                             Popupbox.showPopupbox(message, button1, button2);
@@ -682,7 +682,7 @@ public class BigAlGame : MonoBehaviour {
                             Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                             pause = false;
                             labeldesc.text = "";
-                            labeldesc.GetComponent<Text>().color = Color.white;
+                            labeldesc.color = Color.white;
                             labeldesc.fontStyle = FontStyle.Normal; 
                             buttonpause.GetComponentInChildren<Text>().color = Color.green;
                         }
@@ -694,7 +694,7 @@ public class BigAlGame : MonoBehaviour {
                             button2 = "";
                             pause = true;
                             labeldesc.text = "Game paused.";
-                            labeldesc.GetComponent<Text>().color = Color.red;
+                            labeldesc.color = Color.red;
                             labeldesc.fontStyle = FontStyle.Bold; 
                             buttonpause.GetComponentInChildren<Text>().color = Color.red;
                             Popupbox.showPopupbox(message, button1, button2);
@@ -702,7 +702,7 @@ public class BigAlGame : MonoBehaviour {
                             Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                             pause = false;
                             labeldesc.text = "";
-                            labeldesc.GetComponent<Text>().color = Color.white;
+                            labeldesc.color = Color.white;
                             labeldesc.fontStyle = FontStyle.Normal; 
                             buttonpause.GetComponentInChildren<Text>().color = Color.green;
                         }
@@ -738,7 +738,7 @@ public class BigAlGame : MonoBehaviour {
         fivecount = 0;
         pause = false;
         labeldesc.text = "";
-        labeldesc.GetComponent<Text>().color = Color.white;
+        labeldesc.color = Color.white;
         labeldesc.fontStyle = FontStyle.Normal; 
         buttonpause.GetComponentInChildren<Text>().color = Color.green;
     }
@@ -771,7 +771,7 @@ public class BigAlGame : MonoBehaviour {
         }
         if (GetControlByName("pictureenemy1").GetComponent<SpriteRenderer>().enabled == false)
         {
-            toggleenemy(1);
+            toggleenemy(1, true);
         }
         GameData.Enemies.Find(x => x.Name == "mother Allosaurus").Seen = true;
         e1 = "mother Allosaurus";
@@ -805,7 +805,7 @@ public class BigAlGame : MonoBehaviour {
                 pause = false;
                 if (labeldesc.text == "Game paused.")
                     labeldesc.text = "";
-                labeldesc.GetComponent<Text>().color = Color.white;
+                labeldesc.color = Color.white;
                 labeldesc.fontStyle = FontStyle.Normal;
                 buttonpause.GetComponentInChildren<Text>().color = Color.green;
             }
@@ -820,21 +820,21 @@ public class BigAlGame : MonoBehaviour {
             labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
             if (AlGlobalVar.EnergyValue < 40)
             {
-                labelenergy.GetComponent<Text>().color = Color.red;
+                labelenergy.color = Color.red;
                 picturealenergygreen.SetSpriteImage("aloutlinered");
                 Image currimage2 = picturealenergygreen.GetImage();
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
             }
             else if (AlGlobalVar.EnergyValue < 70)
             {
-                labelenergy.GetComponent<Text>().color = Color.yellow;
+                labelenergy.color = Color.yellow;
                 picturealenergygreen.SetSpriteImage("aloutlineyellow");
                 Image currimage2 = picturealenergygreen.GetImage();
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
             }
             else
             {
-                labelenergy.GetComponent<Text>().color = Color.white;
+                labelenergy.color = Color.white;
                 picturealenergygreen.SetSpriteImage("aloutlinegreen");
                 Image currimage2 = picturealenergygreen.GetImage();
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
@@ -861,7 +861,7 @@ public class BigAlGame : MonoBehaviour {
         string button4 = GameData.PQs[ques].A4;
         pause = true;
         labeldesc.text = "Game paused.";
-        labeldesc.GetComponent<Text>().color = Color.red;
+        labeldesc.color = Color.red;
         labeldesc.fontStyle = FontStyle.Bold;
         buttonpause.GetComponentInChildren<Text>().color = Color.red;
 
@@ -901,21 +901,21 @@ public class BigAlGame : MonoBehaviour {
                     }
                     if (AlGlobalVar.EnergyValue < 40)
                     {
-                        labelenergy.GetComponent<Text>().color = Color.red;
+                        labelenergy.color = Color.red;
                         picturealenergygreen.SetSpriteImage("aloutlinered");
                         Image currimage2 = picturealenergygreen.GetImage();
                         currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                     }
                     else if (AlGlobalVar.EnergyValue < 70)
                     {
-                        labelenergy.GetComponent<Text>().color = Color.yellow;
+                        labelenergy.color = Color.yellow;
                         picturealenergygreen.SetSpriteImage("aloutlineyellow");
                         Image currimage2 = picturealenergygreen.GetImage();
                         currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                     }
                     else
                     {
-                        labelenergy.GetComponent<Text>().color = Color.white;
+                        labelenergy.color = Color.white;
                         picturealenergygreen.SetSpriteImage("aloutlinegreen");
                         Image currimage2 = picturealenergygreen.GetImage();
                         currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
@@ -932,7 +932,7 @@ public class BigAlGame : MonoBehaviour {
         pause = false;
         if (labeldesc.text == "Game paused.")
             labeldesc.text = "";
-        labeldesc.GetComponent<Text>().color = Color.white;
+        labeldesc.color = Color.white;
         labeldesc.fontStyle = FontStyle.Normal;
         buttonpause.GetComponentInChildren<Text>().color = Color.green;
     }
@@ -1096,7 +1096,7 @@ public class BigAlGame : MonoBehaviour {
                     if (e1 == "mother Allosaurus" && (alcloc1 != mloc1 || alcloc2 != mloc2))
                     {
                         e1 = "Missingno";
-                        toggleenemy(1);
+                        toggleenemy(1, false);
                         doflavourtext();
                     }
 
@@ -1124,34 +1124,34 @@ public class BigAlGame : MonoBehaviour {
         else
         {
             if (pictureenemy1.GetSpriteRenderer().enabled == true)
-                toggleenemy(1);
+                toggleenemy(1, false);
             if (pictureenemy2.GetSpriteRenderer().enabled == true)
-                toggleenemy(2);
+                toggleenemy(2, false);
             if (pictureenemy3.GetSpriteRenderer().enabled == true)
-                toggleenemy(3);
+                toggleenemy(3, false);
             if (pictureenemy4.GetSpriteRenderer().enabled == true)
-                toggleenemy(4);
+                toggleenemy(4, false);
             int cloc1old = alcloc1;
             int cloc2old = alcloc2;
             AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - (5 * AlGlobalVar.GetAlGrowSpeed());
             labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
             if (AlGlobalVar.EnergyValue < 40)
             {
-                labelenergy.GetComponent<Text>().color = Color.red;
+                labelenergy.color = Color.red;
                 picturealenergygreen.SetSpriteImage("aloutlinered");
                 Image currimage2 = picturealenergygreen.GetImage();
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
             }
             else if (AlGlobalVar.EnergyValue < 70)
             {
-                labelenergy.GetComponent<Text>().color = Color.yellow;
+                labelenergy.color = Color.yellow;
                 picturealenergygreen.SetSpriteImage("aloutlineyellow");
                 Image currimage2 = picturealenergygreen.GetImage();
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
             }
             else
             {
-                labelenergy.GetComponent<Text>().color = Color.white;
+                labelenergy.color = Color.white;
                 picturealenergygreen.SetSpriteImage("aloutlinegreen");
                 Image currimage2 = picturealenergygreen.GetImage();
                 currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
@@ -1189,7 +1189,7 @@ public class BigAlGame : MonoBehaviour {
                 else
                 {
                     labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
-                    labeldesc.GetComponent<Text>().color = Color.white;
+                    labeldesc.color = Color.white;
                     labeldesc.fontStyle = FontStyle.Normal; 
                     generateenemies();
                     int loccount = 0;
@@ -1207,7 +1207,7 @@ public class BigAlGame : MonoBehaviour {
                     {
                         pause = true;
                         labeldesc.text = "Game paused.";
-                        labeldesc.GetComponent<Text>().color = Color.red;
+                        labeldesc.color = Color.red;
                         labeldesc.fontStyle = FontStyle.Bold;  
                         buttonpause.GetComponentInChildren<Text>().color = Color.red;
                         explorebonus = true;
@@ -1221,7 +1221,7 @@ public class BigAlGame : MonoBehaviour {
                         Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                         pause = false;
                         labeldesc.text = "";
-                        labeldesc.GetComponent<Text>().color = Color.white;
+                        labeldesc.color = Color.white;
                         labeldesc.fontStyle = FontStyle.Normal; 
                         buttonpause.GetComponentInChildren<Text>().color = Color.green;
                     }
@@ -1295,21 +1295,21 @@ public class BigAlGame : MonoBehaviour {
                     labelfitness.text = "Fitness: " + AlGlobalVar.FitnessValue + "%";
                     if (AlGlobalVar.FitnessValue < 40)
                     {
-                        labelfitness.GetComponent<Text>().color = Color.red;
+                        labelfitness.color = Color.red;
                         picturealfitnessgreen.SetSpriteImage("aloutlinered");
                         Image currimage = picturealfitnessgreen.GetImage();
                         currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
                     }
                     else if (AlGlobalVar.FitnessValue < 70)
                     {
-                        labelfitness.GetComponent<Text>().color = Color.yellow;
+                        labelfitness.color = Color.yellow;
                         picturealfitnessgreen.SetSpriteImage("aloutlineyellow");
                         Image currimage = picturealfitnessgreen.GetImage();
                         currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
                     }
                     else
                     {
-                        labelfitness.GetComponent<Text>().color = Color.white;
+                        labelfitness.color = Color.white;
                         picturealfitnessgreen.SetSpriteImage("aloutlinegreen");
                         Image currimage = picturealfitnessgreen.GetImage();
                         currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
@@ -1318,27 +1318,27 @@ public class BigAlGame : MonoBehaviour {
                 string scloc = "" + alcloc1 + alcloc2;
                 int scloc2 = int.Parse(scloc);
                 labeldesc.text = "You are " + GameData.Zones.Find(x => Array.IndexOf(x.Maps, scloc2) >= 0).Name;
-                labeldesc.GetComponent<Text>().color = Color.white;
+                labeldesc.color = Color.white;
                 labeldesc.fontStyle = FontStyle.Normal; 
                 AlGlobalVar.EnergyValue = AlGlobalVar.EnergyValue - (5 * AlGlobalVar.GetAlGrowSpeed());
                 labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
                 if (AlGlobalVar.EnergyValue < 40)
                 {
-                    labelenergy.GetComponent<Text>().color = Color.red;
+                    labelenergy.color = Color.red;
                     picturealenergygreen.SetSpriteImage("aloutlinered");
                     Image currimage2 = picturealenergygreen.GetImage();
                     currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                 }
                 else if (AlGlobalVar.EnergyValue < 70)
                 {
-                    labelenergy.GetComponent<Text>().color = Color.yellow;
+                    labelenergy.color = Color.yellow;
                     picturealenergygreen.SetSpriteImage("aloutlineyellow");
                     Image currimage2 = picturealenergygreen.GetImage();
                     currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                 }
                 else
                 {
-                    labelenergy.GetComponent<Text>().color = Color.white;
+                    labelenergy.color = Color.white;
                     picturealenergygreen.SetSpriteImage("aloutlinegreen");
                     Image currimage2 = picturealenergygreen.GetImage();
                     currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
@@ -1363,6 +1363,10 @@ public class BigAlGame : MonoBehaviour {
                         }
                     }
                 }
+
+                if (AlGlobalVar.FitnessValue == 0)
+                    return;
+
                 if (!attacked)
                     generateenemies();
                 if (AlGlobalVar.LevelValue == 1 && AlGlobalVar.level1choice == 1)
@@ -1484,14 +1488,14 @@ public class BigAlGame : MonoBehaviour {
                 if (pause)
                 {
                     labeldesc.text = "Game paused.\r\nClick pause again to continue.";
-                    labeldesc.GetComponent<Text>().color = Color.red;
+                    labeldesc.color = Color.red;
                     labeldesc.fontStyle = FontStyle.Bold; 
                     buttonpause.GetComponentInChildren<Text>().color = Color.red;
                 }
                 else
                 {
                     labeldesc.text = "";
-                    labeldesc.GetComponent<Text>().color = Color.white;
+                    labeldesc.color = Color.white;
                     labeldesc.fontStyle = FontStyle.Normal; 
                     buttonpause.GetComponentInChildren<Text>().color = Color.green;
                 }
@@ -1525,15 +1529,15 @@ public class BigAlGame : MonoBehaviour {
             e3 = "Missingno";
             e4 = "Missingno";
             if (pictureenemy1.GetSpriteRenderer().enabled)
-                toggleenemy(1);
+                toggleenemy(1, false);
             if (pictureenemy2.GetSpriteRenderer().enabled)
-                toggleenemy(2);
+                toggleenemy(2, false);
             if (pictureenemy3.GetSpriteRenderer().enabled)
-                toggleenemy(3);
+                toggleenemy(3, false);
             if (pictureenemy4.GetSpriteRenderer().enabled)
-                toggleenemy(4);
+                toggleenemy(4, false);
             labeldesc.text = "Level restarted.";
-            labeldesc.GetComponent<Text>().color = Color.white;
+            labeldesc.color = Color.white;
             labeldesc.fontStyle = FontStyle.Normal; 
 
             // reset map
@@ -1586,13 +1590,13 @@ public class BigAlGame : MonoBehaviour {
             labelscore.text = "Score: " + AlGlobalVar.ScoreValue;
             AlGlobalVar.EnergyValue = 100;
             labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
-            labelenergy.GetComponent<Text>().color = Color.white;
+            labelenergy.color = Color.white;
             picturealenergygreen.SetSpriteImage("aloutlinegreen");
             Image currimage2 = picturealenergygreen.GetImage();
             currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
             AlGlobalVar.FitnessValue = 100;
             labelfitness.text = "Fitness: " + AlGlobalVar.FitnessValue + "%";
-            labelfitness.GetComponent<Text>().color = Color.white;
+            labelfitness.color = Color.white;
             picturealfitnessgreen.SetSpriteImage("aloutlinegreen");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
@@ -1635,7 +1639,7 @@ public class BigAlGame : MonoBehaviour {
             e3 = "Missingno";
             e4 = "Missingno";
             labeldesc.text = "Game restarted.";
-            labeldesc.GetComponent<Text>().color = Color.white;
+            labeldesc.color = Color.white;
             labeldesc.fontStyle = FontStyle.Normal;
 
             // hide map
@@ -1685,13 +1689,13 @@ public class BigAlGame : MonoBehaviour {
         {
             pause = true;
             labeldesc.text = "Game paused.";
-            labeldesc.GetComponent<Text>().color = Color.red;
+            labeldesc.color = Color.red;
             labeldesc.fontStyle = FontStyle.Bold;  
             AlGlobalVar.currFF = enemylist[0];
             FFForm.showFFForm();
             pause = false;
             labeldesc.text = "";
-            labeldesc.GetComponent<Text>().color = Color.white;
+            labeldesc.color = Color.white;
             labeldesc.fontStyle = FontStyle.Normal; 
         }
     }
@@ -1700,14 +1704,14 @@ public class BigAlGame : MonoBehaviour {
     {
         pause = true;
         labeldesc.text = "Game paused.";
-        labeldesc.GetComponent<Text>().color = Color.red;
+        labeldesc.color = Color.red;
         labeldesc.fontStyle = FontStyle.Bold; 
         buttonpause.GetComponentInChildren<Text>().color = Color.red;
         AlGlobalVar.currFF = enemylist[enemynum];
         FFForm.showFFForm();
         pause = false;
         labeldesc.text = "";
-        labeldesc.GetComponent<Text>().color = Color.white;
+        labeldesc.color = Color.white;
         labeldesc.fontStyle = FontStyle.Normal; 
         buttonpause.GetComponentInChildren<Text>().color = Color.green;
     }
@@ -1829,21 +1833,21 @@ public class BigAlGame : MonoBehaviour {
                 labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
                 if (AlGlobalVar.EnergyValue < 40)
                 {
-                    labelenergy.GetComponent<Text>().color = Color.red;
+                    labelenergy.color = Color.red;
                     picturealenergygreen.SetSpriteImage("aloutlinered");
                     Image currimage2 = picturealenergygreen.GetImage();
                     currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                 }
                 else if (AlGlobalVar.EnergyValue < 70)
                 {
-                    labelenergy.GetComponent<Text>().color = Color.yellow;
+                    labelenergy.color = Color.yellow;
                     picturealenergygreen.SetSpriteImage("aloutlineyellow");
                     Image currimage2 = picturealenergygreen.GetImage();
                     currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
                 }
                 else
                 {
-                    labelenergy.GetComponent<Text>().color = Color.white;
+                    labelenergy.color = Color.white;
                     picturealenergygreen.SetSpriteImage("aloutlinegreen");
                     Image currimage2 = picturealenergygreen.GetImage();
                     currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
@@ -1903,19 +1907,19 @@ public class BigAlGame : MonoBehaviour {
     {
         if (enemylist[0] != "Missingno" && pictureenemy1.GetSpriteRenderer().enabled == true)
         {
-            toggleenemy(1);
+            toggleenemy(1, false);
         }
         if (enemylist[1] != "Missingno" && pictureenemy2.GetSpriteRenderer().enabled == true)
         {
-            toggleenemy(2);
+            toggleenemy(2, false);
         }
         if (enemylist[2] != "Missingno" && pictureenemy3.GetSpriteRenderer().enabled == true)
         {
-            toggleenemy(3);
+            toggleenemy(3, false);
         }
         if (enemylist[3] != "Missingno" && pictureenemy4.GetSpriteRenderer().enabled == true)
         {
-            toggleenemy(4);
+            toggleenemy(4, false);
         }
     }
 
@@ -2011,7 +2015,7 @@ public class BigAlGame : MonoBehaviour {
             {
                 labeldesc.text = labeldesc.text + "\r\nYou attacked the " + Enemy.Name + ".";
             }
-            labeldesc.GetComponent<Text>().color = Color.white;
+            labeldesc.color = Color.white;
             enemyDefeated = false;
         }
     }
@@ -2026,21 +2030,21 @@ public class BigAlGame : MonoBehaviour {
         labelfitness.text = "Fitness: " + AlGlobalVar.FitnessValue + "%";
         if (AlGlobalVar.FitnessValue < 40)
         {
-            labelfitness.GetComponent<Text>().color = Color.red;
+            labelfitness.color = Color.red;
             picturealfitnessgreen.SetSpriteImage("aloutlinered");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
         }
         else if (AlGlobalVar.FitnessValue < 70)
         {
-            labelfitness.GetComponent<Text>().color = Color.yellow;
+            labelfitness.color = Color.yellow;
             picturealfitnessgreen.SetSpriteImage("aloutlineyellow");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
         }
         else
         {
-            labelfitness.GetComponent<Text>().color = Color.white;
+            labelfitness.color = Color.white;
             picturealfitnessgreen.SetSpriteImage("aloutlinegreen");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
@@ -2059,7 +2063,7 @@ public class BigAlGame : MonoBehaviour {
             else
             {
                 labeldesc.text = labeldesc.text + "\r\nThe " + Enemy.Name + " attacked first!";
-                labeldesc.GetComponent<Text>().color = Color.red;
+                labeldesc.color = Color.red;
             }
             alDefeated = false;
         }
@@ -2070,22 +2074,22 @@ public class BigAlGame : MonoBehaviour {
         GameData.Enemies.Find(x => x.Name == Enemy.Name).bEnergy = GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy;
         if (enemynum == "1")
         {
-            toggleenemy(1);
+            toggleenemy(1, false);
             e1 = "Missingno";
         }
         if (enemynum == "2")
         {
-            toggleenemy(2);
+            toggleenemy(2, false);
             e2 = "Missingno";
         }
         if (enemynum == "3")
         {
-            toggleenemy(3);
+            toggleenemy(3, false);
             e3 = "Missingno";
         }
         if (enemynum == "4")
         {
-            toggleenemy(4);
+            toggleenemy(4, false);
             e4 = "Missingno";
         }
         if ((currpacksize == packsize1 || currpacksize == packsize2) && Enemy.Name == "Diplodocus" && AlGlobalVar.LevelValue == 3)
@@ -2093,7 +2097,7 @@ public class BigAlGame : MonoBehaviour {
             diplohunted = true;
         }
         labeldesc.text = labeldesc.text + "\r\nYou have killed the " + Enemy.Name + "!\r\nYou ate the " + Enemy.Name + ". \r\nKeep growing!";
-        labeldesc.GetComponent<Text>().color = Color.white;
+        labeldesc.color = Color.white;
         AlGlobalVar.WeightValue = AlGlobalVar.WeightValue + (GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy / 10) * AlGlobalVar.GetAlGrowSpeed();
         AlGlobalVar.ScoreValue = AlGlobalVar.ScoreValue
             + (int)(GameData.Enemies.Find(x => x.Name == Enemy.Name).Energy / 100
@@ -2120,14 +2124,14 @@ public class BigAlGame : MonoBehaviour {
             string button1 = "Okay...";
             pause = true;
             labeldesc.text = "Game paused.";
-            labeldesc.GetComponent<Text>().color = Color.red;
+            labeldesc.color = Color.red;
             labeldesc.fontStyle = FontStyle.Bold;
             buttonpause.GetComponentInChildren<Text>().color = Color.red;
             Popupbox.showPopupbox(message, button1, "");
             Popupbox.Button1Clicked += new EventHandler(frm_Button1Clicked);
             pause = false;
             labeldesc.text = "";
-            labeldesc.GetComponent<Text>().color = Color.white;
+            labeldesc.color = Color.white;
             labeldesc.fontStyle = FontStyle.Normal;
             buttonpause.GetComponentInChildren<Text>().color = Color.green;
             lvl3cap = true;
@@ -2157,21 +2161,21 @@ public class BigAlGame : MonoBehaviour {
         labelfitness.text = "Fitness: " + AlGlobalVar.FitnessValue + "%";
         if (AlGlobalVar.FitnessValue < 40)
         {
-            labelfitness.GetComponent<Text>().color = Color.red;
+            labelfitness.color = Color.red;
             picturealfitnessgreen.SetSpriteImage("aloutlinered");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
         }
         else if (AlGlobalVar.FitnessValue < 70)
         {
-            labelfitness.GetComponent<Text>().color = Color.yellow;
+            labelfitness.color = Color.yellow;
             picturealfitnessgreen.SetSpriteImage("aloutlineyellow");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
         }
         else
         {
-            labelfitness.GetComponent<Text>().color = Color.white;
+            labelfitness.color = Color.white;
             picturealfitnessgreen.SetSpriteImage("aloutlinegreen");
             Image currimage = picturealfitnessgreen.GetImage();
             currimage.fillAmount = (float)(AlGlobalVar.FitnessValue / 100);
@@ -2184,21 +2188,21 @@ public class BigAlGame : MonoBehaviour {
         labelenergy.text = "Energy: " + AlGlobalVar.EnergyValue + "%";
         if (AlGlobalVar.EnergyValue < 40)
         {
-            labelenergy.GetComponent<Text>().color = Color.red;
+            labelenergy.color = Color.red;
             picturealenergygreen.SetSpriteImage("aloutlinered");
             Image currimage2 = picturealenergygreen.GetImage();
             currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
         }
         else if (AlGlobalVar.EnergyValue < 70)
         {
-            labelenergy.GetComponent<Text>().color = Color.yellow;
+            labelenergy.color = Color.yellow;
             picturealenergygreen.SetSpriteImage("aloutlineyellow");
             Image currimage2 = picturealenergygreen.GetImage();
             currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
         }
         else
         {
-            labelenergy.GetComponent<Text>().color = Color.white;
+            labelenergy.color = Color.white;
             picturealenergygreen.SetSpriteImage("aloutlinegreen");
             Image currimage2 = picturealenergygreen.GetImage();
             currimage2.fillAmount = (float)(AlGlobalVar.EnergyValue / 100);
@@ -2401,14 +2405,7 @@ public class BigAlGame : MonoBehaviour {
             }
                 if (GetControlByName("pictureenemy" + b).GetComponent<SpriteRenderer>().enabled == false)
                 {
-                    if (b == 1)
-                        toggleenemy(1);
-                    else if (b == 2)
-                        toggleenemy(2);
-                    else if (b == 3)
-                        toggleenemy(3);
-                    else if (b == 4)
-                        toggleenemy(4);
+                    toggleenemy(b, true);
                 }
                 GameData.Enemies.Find(x => x.Name == earray[a]).Seen = true;
                 if (earray[a] == "Allosaurus (female)" && AlGlobalVar.LevelValue == 4)
@@ -2426,14 +2423,7 @@ public class BigAlGame : MonoBehaviour {
             {
                 if (GetControlByName("pictureenemy" + b).GetComponent<SpriteRenderer>().enabled)
                 {
-                    if (b == 1)
-                        toggleenemy(1);
-                    else if (b == 2)
-                        toggleenemy(2);
-                    else if (b == 3)
-                        toggleenemy(3);
-                    else if (b == 4)
-                        toggleenemy(4);
+                    toggleenemy(b, false);
                 }
             }
             if (AlGlobalVar.LevelValue == 1 && AlGlobalVar.level1choice == 1 && alcloc1 == mloc1 && alcloc2 == mloc2)
@@ -2461,7 +2451,7 @@ public class BigAlGame : MonoBehaviour {
                 string button2 = "";
                 pause = true;
                 labeldesc.text = "Game paused.";
-                labeldesc.GetComponent<Text>().color = Color.red;
+                labeldesc.color = Color.red;
                 labeldesc.fontStyle = FontStyle.Bold; 
                 buttonpause.GetComponentInChildren<Text>().color = Color.red;
                 Popupbox.showPopupbox(message, button1, button2);
@@ -2469,7 +2459,7 @@ public class BigAlGame : MonoBehaviour {
                 Popupbox.Button2Clicked += new EventHandler(frm_Button2Clicked);
                 pause = false;
                 labeldesc.text = "";
-                labeldesc.GetComponent<Text>().color = Color.white;
+                labeldesc.color = Color.white;
                 labeldesc.fontStyle = FontStyle.Normal; 
                 buttonpause.GetComponentInChildren<Text>().color = Color.green;
             }
@@ -2477,21 +2467,21 @@ public class BigAlGame : MonoBehaviour {
         fivetimer = true; // start enemy timer
     }
 
-    public void toggleenemy(int enemyNumber)
+    public void toggleenemy(int enemyNumber, bool show)
     {
         for (int n = enemyNumber; n < (enemyNumber + 1); n++)
         {
-            GetControlByName("pictureenemy" + n).GetComponent<SpriteRenderer>().enabled = !GetControlByName("pictureenemy" + n).GetComponent<SpriteRenderer>().enabled;
-            GetControlByName("labelenemy" + n).GetComponent<Text>().enabled = !GetControlByName("labelenemy" + n).GetComponent<Text>().enabled;
-            GetControlByName("labelenemyname" + n).GetComponent<Text>().enabled = !GetControlByName("labelenemyname" + n).GetComponent<Text>().enabled;
-            GetControlByName("labelenemy" + n + "data").GetComponent<Text>().enabled = !GetControlByName("labelenemy" + n + "data").GetComponent<Text>().enabled;
-            GetControlByName("attackbutton" + n).GetComponentInChildren<Text>().enabled = !GetControlByName("attackbutton" + n).GetComponentInChildren<Text>().enabled;
-            GetControlByName("FFbutton" + n).GetComponentInChildren<Text>().enabled = !GetControlByName("FFbutton" + n).GetComponentInChildren<Text>().enabled;
-            GetControlByName("attackbutton" + n).GetComponent<Image>().enabled = !GetControlByName("attackbutton" + n).GetComponent<Image>().enabled;
-            GetControlByName("FFbutton" + n).GetComponent<Image>().enabled = !GetControlByName("FFbutton" + n).GetComponent<Image>().enabled;
-            GetControlByName("picturee" + n + "energybar").GetComponent<Image>().enabled = !GetControlByName("picturee" + n + "energybar").GetComponent<Image>().enabled;
-            GetControlByName("picturee" + n + "fiercebar").GetComponent<Image>().enabled = !GetControlByName("picturee" + n + "fiercebar").GetComponent<Image>().enabled;
-            GetControlByName("picturee" + n + "agilitybar").GetComponent<Image>().enabled = !GetControlByName("picturee" + n + "agilitybar").GetComponent<Image>().enabled;
+            GetControlByName("pictureenemy" + n).GetComponent<SpriteRenderer>().enabled = show;
+            GetControlByName("labelenemy" + n).GetComponent<Text>().enabled = show;
+            GetControlByName("labelenemyname" + n).GetComponent<Text>().enabled = show;
+            GetControlByName("labelenemy" + n + "data").GetComponent<Text>().enabled = show;
+            GetControlByName("attackbutton" + n).GetComponentInChildren<Text>().enabled = show;
+            GetControlByName("FFbutton" + n).GetComponentInChildren<Text>().enabled = show;
+            GetControlByName("attackbutton" + n).GetComponent<Image>().enabled = show;
+            GetControlByName("FFbutton" + n).GetComponent<Image>().enabled = show;
+            GetControlByName("picturee" + n + "energybar").GetComponent<Image>().enabled = show;
+            GetControlByName("picturee" + n + "fiercebar").GetComponent<Image>().enabled = show;
+            GetControlByName("picturee" + n + "agilitybar").GetComponent<Image>().enabled = show;
         }
     }
     
@@ -2517,7 +2507,7 @@ public class BigAlGame : MonoBehaviour {
                         {
                             if (pictureenemy1.GetSpriteRenderer().enabled)
                             {
-                                toggleenemy(1);
+                                toggleenemy(1, false);
                                 e1 = "Missingno";
                             }
                         }
@@ -2525,7 +2515,7 @@ public class BigAlGame : MonoBehaviour {
                         {
                             if (pictureenemy2.GetSpriteRenderer().enabled)
                             {
-                                toggleenemy(2);
+                                toggleenemy(2, false);
                                 e2 = "Missingno";
                             }
                         }
@@ -2533,7 +2523,7 @@ public class BigAlGame : MonoBehaviour {
                         {
                             if (pictureenemy3.GetSpriteRenderer().enabled)
                             {
-                                toggleenemy(3);
+                                toggleenemy(3, false);
                                 e3 = "Missingno";
                             }
                         }
@@ -2541,7 +2531,7 @@ public class BigAlGame : MonoBehaviour {
                         {
                             if (pictureenemy4.GetSpriteRenderer().enabled)
                             {
-                                toggleenemy(4);
+                                toggleenemy(4, false);
                                 e4 = "Missingno";
                             }
                         }

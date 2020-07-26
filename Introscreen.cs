@@ -2,31 +2,26 @@
 
 public class Introscreen : MonoBehaviour
 {
-    Canvas thiscanvas;
+    [SerializeField] Canvas thiscanvas;
+    [SerializeField] BigAlGame bigAlGame;
+    [SerializeField] Canvas howtocanvas;
 
     public void Awake()
     {
-        GameObject popupholder = GameObject.Find("Popups");
-        thiscanvas = AlGlobalVar.FindObject(popupholder, "IntroscreenCanvas").GetComponent<Canvas>();
         thiscanvas.gameObject.SetActive(true);
-        GameObject.Find("GameController").GetComponent<BigAlGame>().pause = true;
+        bigAlGame.pause = true;
     }
 
     public void button1_Click() // howto screen
     {
-        GameObject popupholder = GameObject.Find("Popups");
-        Canvas howtocanvas = AlGlobalVar.FindObject(popupholder, "HowToscreenCanvas").GetComponent<Canvas>();
-        if (howtocanvas)
-        {
-            howtocanvas.gameObject.SetActive(true);
-            thiscanvas.gameObject.SetActive(false);
-        }
+        howtocanvas.gameObject.SetActive(true);
+        thiscanvas.gameObject.SetActive(false);
     }
 
     public void button2_Click() // play game
     {
-        thiscanvas.gameObject.SetActive(false);      
-        GameObject.Find("GameController").GetComponent<BigAlGame>().setupscreen();
+        thiscanvas.gameObject.SetActive(false);
+        bigAlGame.setupscreen();
     }
 
     public void button3_Click() // close window
